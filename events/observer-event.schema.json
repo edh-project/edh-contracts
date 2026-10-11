@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://edh-project.github.io/contracts/events/observer-event.schema.json",
+  "title":"EDH Observer Event",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","ts","actor","event","correlation_id","run_id","plan_id","task_id","span_id","parent_span_id","message","source","meta"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "ts":{"type":"string","format":"date-time"},
+    "actor":{"type":"string","minLength":1},
+    "event":{"type":"string","minLength":1},
+    "correlation_id":{"type":["string","null"]},
+    "run_id":{"type":["string","null"]},
+    "plan_id":{"type":["string","null"]},
+    "task_id":{"type":["string","null"]},
+    "span_id":{"type":"string","minLength":1},
+    "parent_span_id":{"type":["string","null"]},
+    "message":{"type":"string"},
+    "source":{"type":"object","additionalProperties":false,"required":["client","conversation_id","turn_id","message_id","action_id","action_label","locator","source_quality"],"properties":{
+      "client":{"type":["string","null"]},"conversation_id":{"type":["string","null"]},"turn_id":{"type":["string","null"]},"message_id":{"type":["string","null"]},"action_id":{"type":["string","null"]},"action_label":{"type":["string","null"]},"locator":{"type":["string","null"]},"source_quality":{"type":"string","minLength":1}
+    }},
+    "meta":{"type":"object"}
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "source_repository": "/Users/dzzk/WORK/_bridge-local-execution",
+  "source_commit": "9ad516ef267fa18075ac15cc4abd78d8553c5122",
+  "units": [
+    {
+      "destination": "schemas/task-envelope.schema.json",
+      "source": "schemas/task-envelope.schema.json",
+      "mode": "verbatim",
+      "consumers": [
+        "edh-core",
+        "edh-observer"
+      ],
+      "compatibility": "unchanged"
+    },
+    {
+      "destination": "schemas/escalation-packet.schema.json",
+      "source": "schemas/escalation-packet.schema.json",
+      "mode": "verbatim",
+      "consumers": [
+        "edh-core"
+      ],
+      "compatibility": "unchanged"
+    },
+    {
+      "destination": "knowledge/schemas/event.schema.json",
+      "source": "knowledge/schemas/event.schema.json",
+      "mode": "verbatim",
+      "consumers": [
+        "edh-core",
+        "project-history"
+      ],
+      "compatibility": "unchanged"
+    },
+    {
+      "destination": "knowledge/schemas/record.schema.json",
+      "source": "knowledge/schemas/record.schema.json",
+      "mode": "verbatim",
+      "consumers": [
+        "edh-core",
+        "project-history"
+      ],
+      "compatibility": "unchanged"
+    },
+    {
+      "destination": "events/observer-event.schema.json",
+      "source": "scripts/observer-events.mjs",
+      "mode": "normalized-schema",
+      "consumers": [
+        "edh-core",
+        "edh-observer"
+      ],
+      "compatibility": "storage/path implementation excluded; emitted event object frozen"
+    },
+    {
+      "destination": "lifecycle/checkpoint.schema.json",
+      "source": "scripts/run-lifecycle.mjs",
+      "mode": "normalized-schema",
+      "consumers": [
+        "edh-core",
+        "edh-observer"
+      ],
+      "compatibility": "preserves nullability and patch extensibility; no closed status vocabulary invented"
+    },
+    {
+      "destination": "lifecycle/event.schema.json",
+      "source": "scripts/run-lifecycle.mjs",
+      "mode": "normalized-schema",
+      "consumers": [
+        "edh-core",
+        "edh-observer"
+      ],
+      "compatibility": "captures START/PROGRESS/etc JSONL event shape without lifecycle implementation"
+    },
+    {
+      "destination": "bridge/executor-policy-state.schema.json",
+      "source": "server/executor-policy.mjs",
+      "mode": "normalized-schema",
+      "consumers": [
+        "edh-observer"
+      ],
+      "compatibility": "public state only; setter/dispatch implementation excluded"
+    },
+    {
+      "destination": "bridge/task-admission-command.schema.json",
+      "source": "server/index.mjs",
+      "mode": "normalized-schema",
+      "consumers": [
+        "edh-observer"
+      ],
+      "compatibility": "captures Side Panel command body variants take/take_next/release/prepare; authority remains Core"
+    },
+    {
+      "destination": "bridge/dashboard-state.schema.json",
+      "source": "server/index.mjs",
+      "mode": "normalized-envelope",
+      "consumers": [
+        "edh-observer"
+      ],
+      "compatibility": "composition keys/revision frozen; nested subsystem payloads intentionally open for X2 source-backed tightening"
+    }
+  ]
+}

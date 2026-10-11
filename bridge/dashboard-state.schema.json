@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://edh-project.github.io/contracts/bridge/dashboard-state.schema.json",
+  "title":"EDH Bridge Dashboard State Envelope",
+  "description":"Stable composition envelope consumed by Observer. Nested subsystem payloads remain open during X1 and may be tightened only from source-backed consumer needs.",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","revision","generated_at","observer","project_tasks","rdc","prepared_dispatch","executor_policy"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"revision":{"type":"integer","minimum":0},"generated_at":{"type":"string","format":"date-time"},
+    "observer":{"type":"object"},"project_tasks":{"type":"object"},"rdc":{"type":"object"},"prepared_dispatch":{"type":"object"},
+    "executor_policy":{"$ref":"./executor-policy-state.schema.json"}
+  }
+}

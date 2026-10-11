@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://edh-project.github.io/contracts/bridge/executor-policy-state.schema.json",
+  "title":"EDH Bridge Executor Policy State",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","mode","updated_at","updated_by","compare_root","semantics"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"mode":{"enum":["AUTO","EDH","RDC","COMPARE"]},
+    "updated_at":{"type":["string","null"]},"updated_by":{"type":["string","null"]},"compare_root":{"type":"string"},
+    "semantics":{"type":"object","additionalProperties":false,"required":["AUTO","EDH","RDC","COMPARE"],"properties":{
+      "AUTO":{"type":"string"},"EDH":{"type":"string"},"RDC":{"type":"string"},"COMPARE":{"type":"string"}
+    }}
+  }
+}

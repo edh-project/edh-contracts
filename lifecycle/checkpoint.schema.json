@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://edh-project.github.io/contracts/lifecycle/checkpoint.schema.json",
+  "title":"EDH Run Lifecycle Checkpoint",
+  "description":"Durable run checkpoint observed from scripts/run-lifecycle.mjs; extensible because updateLifecycle merges arbitrary patch fields.",
+  "type":"object",
+  "required":["schema_version","run_dir","run_id","status","phase","started_at","updated_at"],
+  "properties":{
+    "schema_version":{"const":"1.0"},"run_dir":{"type":"string","minLength":1},"run_id":{"type":"string","minLength":1},
+    "plan_id":{"type":["string","null"]},"task_id":{"type":["string","null"]},"goal":{"type":["string","null"]},
+    "status":{"type":"string","minLength":1},"phase":{"type":"string","minLength":1},"completed":{"type":"array"},
+    "current":{},"pending":{"type":"array"},"budget":{"type":"object"},"budget_used":{"type":"object"},"waiting_reason":{},
+    "safe_to_interrupt":{"type":"string"},"last_durable_checkpoint":{},"source":{"type":"object"},"execution_profile":{"type":"object"},
+    "started_at":{"type":"string","format":"date-time"},"updated_at":{"type":"string","format":"date-time"}
+  },
+  "additionalProperties":true
+}
