@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edh-project.github.io/contracts/comparison/comparison-record.schema.json",
+  "title": "EDH Comparison Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","comparison_id","task_id","status","created_at","baseline","runs","comparison"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "comparison_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "plan_id": { "type": ["string","null"] },
+    "task_class": { "type": ["string","null"] },
+    "status": { "enum": ["PLANNED","RUNNING","COMPLETE","ABORTED"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": ["string","null"], "format": "date-time" },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit","task_envelope_sha256","acceptance_sha256","verifier_id","budget_policy_sha256"],
+      "properties": {
+        "commit": { "type": ["string","null"] },
+        "task_envelope_sha256": { "type": "string", "minLength": 1 },
+        "acceptance_sha256": { "type": "string", "minLength": 1 },
+        "verifier_id": { "type": "string", "minLength": 1 },
+        "verifier_version": { "type": ["string","null"] },
+        "budget_policy_sha256": { "type": "string", "minLength": 1 }
+      }
+    },
+    "runs": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/run" }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["winner","decision_policy","notes"],
+      "properties": {
+        "winner": { "type": ["string","null"], "enum": ["EDH","RDC",null] },
+        "decision_policy": { "type": ["string","null"] },
+        "notes": { "type": ["string","null"] }
+      }
+    }
+  },
+  "$defs": {
+    "quality": { "enum": ["reported","derived","observed","estimated","unavailable","not_observed","not_applicable"] },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value","quality","source"],
+      "properties": {
+        "value": { "type": ["number","integer","string","boolean","null"] },
+        "unit": { "type": ["string","null"] },
+        "quality": { "$ref": "#/$defs/quality" },
+        "source": { "type": ["string","null"] }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id","executor","status","worktree","run_dir","verifier","metrics","artifacts"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "executor": { "enum": ["EDH","RDC"] },
+        "status": { "enum": ["PLANNED","RUNNING","DONE","FAILED","ABORTED"] },
+        "worktree": { "type": ["string","null"] },
+        "run_dir": { "type": ["string","null"] },
+        "failure_class": { "type": ["string","null"] },
+        "verifier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["result","evidence_ref"],
+          "properties": {
+            "result": { "enum": ["PASS","FAIL","UNKNOWN"] },
+            "evidence_ref": { "type": ["string","null"] }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/metric" },
+          "properties": {
+            "elapsed_seconds": { "$ref": "#/$defs/metric" },
+            "tool_calls": { "$ref": "#/$defs/metric" },
+            "reads": { "$ref": "#/$defs/metric" },
+            "writes": { "$ref": "#/$defs/metric" },
+            "repair_cycles": { "$ref": "#/$defs/metric" },
+            "human_interventions": { "$ref": "#/$defs/metric" },
+            "scope_violations": { "$ref": "#/$defs/metric" },
+            "input_tokens": { "$ref": "#/$defs/metric" },
+            "output_tokens": { "$ref": "#/$defs/metric" },
+            "context_tokens": { "$ref": "#/$defs/metric" }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind","ref"],
+            "properties": {
+              "kind": { "type": "string", "minLength": 1 },
+              "ref": { "type": "string", "minLength": 1 },
+              "sha256": { "type": ["string","null"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

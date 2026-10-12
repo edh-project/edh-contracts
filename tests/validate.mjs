@@ -4,7 +4,7 @@ import {dirname,join} from 'node:path';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=dirname(here);
-const dirs=['schemas','knowledge/schemas','events','lifecycle','bridge'];
+const dirs=['schemas','knowledge/schemas','events','lifecycle','bridge','comparison'];
 
 async function jsonFiles(dir){
   const base=join(root,dir);
@@ -37,4 +37,17 @@ for(const k of ['observer','project_tasks','rdc','prepared_dispatch','executor_p
 const admission=find('/bridge/task-admission-command.schema.json');
 if(!Array.isArray(admission?.oneOf)||admission.oneOf.length!==2) throw new Error('task admission variants missing');
 
-console.log(JSON.stringify({ok:true,contracts:files.length,checkpoint_semantics:'permissive',bridge_envelope:true},null,2));
+const comparison=find('/comparison/comparison-record.schema.json');
+if(!comparison) throw new Error('comparison record schema missing');
+if(comparison?.properties?.runs?.minItems!==2 || comparison?.properties?.runs?.maxItems!==2) throw new Error('comparison must contain exactly two sibling runs');
+const executorEnum=comparison?.$defs?.run?.properties?.executor?.enum||[];
+if(JSON.stringify(executorEnum)!==JSON.stringify(['EDH','RDC'])) throw new Error('comparison executors must be EDH and RDC');
+const qualityEnum=comparison?.$defs?.quality?.enum||[];
+for(const q of ['reported','derived','observed','estimated','unavailable','not_observed','not_applicable']){
+  if(!qualityEnum.includes(q)) throw new Error('comparison metric quality missing '+q);
+}
+const fixture=JSON.parse(await readFile(join(root,'fixtures','comparison-record.min.json'),'utf8'));
+if(fixture.runs?.length!==2) throw new Error('comparison fixture must have two runs');
+if(JSON.stringify(fixture.runs.map(x=>x.executor))!==JSON.stringify(['EDH','RDC'])) throw new Error('comparison fixture executor order mismatch');
+
+console.log(JSON.stringify({ok:true,contracts:files.length,checkpoint_semantics:'permissive',bridge_envelope:true,comparison_record:true},null,2));
